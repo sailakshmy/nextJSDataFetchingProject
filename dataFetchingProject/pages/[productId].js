@@ -4,6 +4,9 @@ import React from "react";
 
 const ProductDetailsPage = ({ product }) => {
   console.log("pr", product);
+  // if (!product) {
+  //   return <p>Loading</p>;
+  // }
   return (
     <div>
       <h1>{product.title}</h1>
@@ -33,14 +36,14 @@ export async function getStaticPaths() {
       {
         params: { productId: "p1" },
       },
-      {
-        params: { productId: "p2" },
-      },
-      {
-        params: { productId: "p3" },
-      },
+      // {
+      //   params: { productId: "p2" },
+      // },
+      // {
+      //   params: { productId: "p3" },
+      // },
     ],
-    fallback: false,
+    fallback: "blocking", // true, // false,
   };
 }
 
