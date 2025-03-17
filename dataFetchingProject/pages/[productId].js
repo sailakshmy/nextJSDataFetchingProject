@@ -4,9 +4,9 @@ import React from "react";
 
 const ProductDetailsPage = ({ product }) => {
   console.log("pr", product);
-  // if (!product) {
-  //   return <p>Loading</p>;
-  // }
+  if (!product) {
+    return <p>Loading</p>;
+  }
   return (
     <div>
       <h1>{product.title}</h1>
@@ -22,10 +22,15 @@ export async function getStaticProps(context) {
   const filePath = path.join(process.cwd(), "data", "dummy-backend.json");
   const jsonData = await fs.readFile(filePath);
   const data = JSON.parse(jsonData);
-  const filteredProduct = data?.products?.filter((prod) => prod?.id === prodId);
+  const filteredProduct = data?.products?.find((prod) => prod?.id === prodId);
+  if (!filteredProduct) {
+    return {
+      notFound: true,
+    };
+  }
   return {
     props: {
-      product: filteredProduct?.[0],
+      product: filteredProduct,
     },
   };
 }
@@ -49,7 +54,7 @@ export async function getStaticPaths() {
     // },
     // ],
     paths: [...pathsWithParams],
-    fallback: "blocking", // true, // false,
+    fallback: true, //"blocking", // true, // false,
   };
 }
 
