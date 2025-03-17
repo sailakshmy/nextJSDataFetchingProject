@@ -31,18 +31,24 @@ export async function getStaticProps(context) {
 }
 
 export async function getStaticPaths() {
+  const filePath = path.join(process.cwd(), "data", "dummy-backend.json");
+  const jsonData = await fs.readFile(filePath);
+  const data = JSON.parse(jsonData);
+  const ids = data?.products?.map((product) => product?.id);
+  const pathsWithParams = ids?.map((id) => ({ params: { productId: id } }));
   return {
-    paths: [
-      {
-        params: { productId: "p1" },
-      },
-      // {
-      //   params: { productId: "p2" },
-      // },
-      // {
-      //   params: { productId: "p3" },
-      // },
-    ],
+    // paths: [
+    // {
+    //   params: { productId: "p1" },
+    // },
+    // {
+    //   params: { productId: "p2" },
+    // },
+    // {
+    //   params: { productId: "p3" },
+    // },
+    // ],
+    paths: [...pathsWithParams],
     fallback: "blocking", // true, // false,
   };
 }
