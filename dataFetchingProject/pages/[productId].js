@@ -16,7 +16,7 @@ const ProductDetailsPage = ({ product }) => {
 };
 
 export async function getStaticProps(context) {
-  console.log("context", context);
+  // console.log("context", context);
   const { params } = context;
   const prodId = params.productId;
   const filePath = path.join(process.cwd(), "data", "dummy-backend.json");
