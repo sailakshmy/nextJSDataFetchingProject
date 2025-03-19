@@ -1,33 +1,60 @@
 import React, { useEffect, useState } from "react";
+import useSWR from "swr";
 
 const LastSalesPage = () => {
   const [sales, setSales] = useState();
-  const [loading, setLoading] = useState(false);
+  //   const [loading, setLoading] = useState(false);
+
+  const { data, error } = useSWR(
+    "https://nextjs-dummyproject-37a39-default-rtdb.firebaseio.com/sales.json",
+    (url) => fetch(url).then((res) => res.json())
+  );
+
   useEffect(() => {
-    setLoading(true);
-    fetch(
-      "https://nextjs-dummyproject-37a39-default-rtdb.firebaseio.com/sales.json"
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        const transformedSales = [];
-        for (const key in data) {
-          transformedSales.push({
-            id: key,
-            username: data[key].username,
-            volume: data[key].volume,
-          });
-        }
-        setSales(transformedSales);
-        setLoading(false);
-      });
-  }, []);
-  if (loading) {
-    return <p>Loading....</p>;
-  }
-  if (!sales) {
+    if (data) {
+      const transformedSales = [];
+      for (const key in data) {
+        transformedSales.push({
+          id: key,
+          username: data[key].username,
+          volume: data[key].volume,
+        });
+      }
+      setSales(transformedSales);
+    }
+  }, [data]);
+
+  //   useEffect(() => {
+  //     setLoading(true);
+  //     fetch(
+  //       "https://nextjs-dummyproject-37a39-default-rtdb.firebaseio.com/sales.json"
+  //     )
+  //       .then((res) => res.json())
+  //       .then((data) => {
+  //         const transformedSales = [];
+  //         for (const key in data) {
+  //           transformedSales.push({
+  //             id: key,
+  //             username: data[key].username,
+  //             volume: data[key].volume,
+  //           });
+  //         }
+  //         setSales(transformedSales);
+  //         setLoading(false);
+  //       });
+  //   }, []);
+  //   if (loading) {
+
+  if (error) {
     return <p>No Sales data yet!</p>;
   }
+
+  if (!data || !sales) {
+    return <p>Loading....</p>;
+  }
+  //   if (!sales) {
+  //     return <p>No Sales data yet!</p>;
+  //   }
   return (
     <div>
       <ul>
